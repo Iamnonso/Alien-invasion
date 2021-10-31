@@ -12,6 +12,11 @@ def run_game():
     screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
     pygame.display.set_caption("Alien Invasion - OS_01 Assignments")
     
+    #GAME SPEED
+    FBS = game_settings.gameSpeed
+    clock = pygame.time.Clock()
+
+    
     #Make a ship
     ship = Ship(game_settings,screen)
     #make a group to store bullets in.
@@ -19,6 +24,7 @@ def run_game():
     
     #Start the main loop for the game.
     while True:
+        clock.tick(FBS)
         #listen to Game Quit.
         gf.check_events(game_settings, screen, ship, bullets)
         ship.update()
