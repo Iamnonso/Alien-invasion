@@ -31,7 +31,6 @@ def run_game():
         clock.tick(FBS)
         games.update_screen(game_settings, screen, player, lost, enemies)
         
-     
         if int(game_settings.startLives) <= 0 or player.health <= 0:
             lost = True
             game_settings.lost_count += 1
