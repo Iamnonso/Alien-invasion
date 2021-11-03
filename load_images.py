@@ -14,6 +14,7 @@ MOTHER_SHIP = pygame.image.load(os.path.join("images","alien1.bmp"))
 RED_LASER = pygame.image.load(os.path.join("images", "pixel_laser_red.bmp"))
 GREEN_LASER = pygame.image.load(os.path.join("images", "pixel_laser_green.bmp"))
 BLUE_LASER = pygame.image.load(os.path.join("images", "pixel_laser_blue.bmp"))
+YELLOW_LASER = pygame.image.load(os.path.join("images", "pixel_laser_yellow.bmp"))
 
 #background Image
 BG_1 =  pygame.transform.scale(pygame.image.load(os.path.join("images", "invader_space_bg1.bmp")), (game_settings.screen_width,game_settings.screen_height))
