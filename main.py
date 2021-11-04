@@ -1,7 +1,7 @@
 import sys
 import pygame
 from settings import Settings
-from ship import Player
+from ship import Player, Player2
 from ship import alien_ships
 import game_functions as games
 import random
@@ -25,13 +25,14 @@ def run_game():
     screen_rect = screen.get_rect()
     run = True
     player = Player(screen_rect.centerx, 500)
+    player2 = Player2(screen_rect.centerx + player.get_width() + 30, 500)
     
     #Start the main loop for the game.
     while run:     
         clock.tick(FBS)
-        games.update_screen(game_settings, screen, player, lost, enemies)
+        games.update_screen(game_settings, screen, player, player2, lost, enemies)
         
-        if int(game_settings.startLives) <= 0 or player.health <= 0:
+        if int(game_settings.startLives) <= 0 or player.health <= 0 or player2.health <= 0:
             lost = True
             game_settings.lost_count += 1
         
@@ -45,9 +46,9 @@ def run_game():
         
         #increase game speed with level
         if int(game_settings.startLevel)/2 > game_settings.startLevel:
-            game_settings.gameSpeed = 3
-            print(game_settings.gameSpeed)
-                   
+            game_settings.gameSpeed += 3
+           
+              
         if len(enemies) == 0:
             game_settings.startLevel += 1
             game_settings.wave_length += 5 # ADD Number of starting aliens on the screen
@@ -56,12 +57,15 @@ def run_game():
                 enemies.append(enemy) 
                
         #listen to EVENTS function.
-        games.check_events(game_settings, player)
+        games.check_events(game_settings, player, player2)
         player.update(player)
+        player2.update(player2)
         
-        games.shoot_alien_laser(enemies, game_settings, player) 
+        games.shoot_alien_laser(enemies, game_settings, player,player2) 
                
         player.move_lasers(-game_settings.bullet_speed_factor, enemies, game_settings)
+        player2.move_lasers(-game_settings.bullet_speed_factor, enemies, game_settings)
+        
         
 def main_menu():
     title_font = pygame.font.SysFont("comicsans", 40)

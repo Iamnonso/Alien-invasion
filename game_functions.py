@@ -5,18 +5,18 @@ import  load_images
 from pygame.locals import *
 import random
 
-def check_events(game_settings, player):
+def check_events(game_settings, player, player2):
     """Respond to keypres and mouse events"""  
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            control.check_keydown_events(event, game_settings, player)
+            control.check_keydown_events(event, game_settings, player, player2)
         elif event.type == pygame.KEYUP:
-            control.check_keyup_events(event, player)
+            control.check_keyup_events(event, player, player2)
 
            
-def update_screen(game_settings, screen, player, lost, enemies):
+def update_screen(game_settings, screen, player,player2, lost, enemies):
     """Update images on the screen and flip to the new screen"""
     screen.blit(load_images.BG_1,(0,0))
     #screen.fill(game_settings.bg_color)
@@ -38,15 +38,16 @@ def update_screen(game_settings, screen, player, lost, enemies):
         screen.blit(lost_label, (game_settings.screen_width/2 - lost_label.get_width()/2, 350 ))
         
     player.draw(screen)
+    player2.draw(screen)
     
     #Make the most recently draw screen visible
     pygame.display.flip()
 
 #fire enemy lasers
-def shoot_alien_laser(enemies,game_settings, player):
+def shoot_alien_laser(enemies,game_settings, player, player2):
     for enemy in enemies[:]:
             enemy.move(game_settings.enemy_vel)
-            enemy.move_lasers(game_settings.laser_vel, player)
+            enemy.move_lasers(game_settings.laser_vel, player, player2)
             
             #Allow the enempy to shoot at randow
             if random.randrange(0, 2 * 700) == 1:

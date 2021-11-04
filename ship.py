@@ -43,14 +43,17 @@ class Ships:
         for laser in self.lasers:
             laser.draw(window)
 
-    def move_lasers(self, vel, obj):
+    def move_lasers(self, vel, obj, obj2):
         self.cooldown()
         for laser in self.lasers:
             laser.move(vel)
             if laser.off_screen(game_settings.screen_height):
                 self.lasers.remove(laser)
             elif laser.collision(obj):
-                obj.health -= 5 #if enempy bullet collede with player ship remove 5 from life.
+                obj.health -= 3 #if enempy bullet collede with player ship remove 5 from life.
+                self.lasers.remove(laser)
+            elif laser.collision(obj2):
+                obj2.health -= 3
                 self.lasers.remove(laser)
 
     def cooldown(self):
@@ -120,6 +123,54 @@ class Player(Ships):
         pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
         pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
 
+
+class Player2(Ships):
+    def __init__(self, x, y, health=100):
+        super().__init__(x, y, health)
+        self.ship_img = pygame.transform.scale(load_images.WAR_SHIP, (70,70))
+        self.laser_img = load_images.YELLOW_LASER
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.max_health = health
+        
+        # Movement flags
+        self.moving_right = False
+        self.moving_left = False
+        self.moving_up = False
+        self.moving_down = False
+        
+    def update(self, ship):
+        """update player ship position base on movement flag"""
+        if self.moving_right and ship.x + game_settings.player_vel + ship.get_width() < game_settings.screen_width:
+            ship.x += game_settings.player_vel
+        if self.moving_left  and ship.x - game_settings.player_vel > 0:
+            ship.x -= game_settings.player_vel
+        if self.moving_up and ship.y - game_settings.player_vel > 0:
+            ship.y -= game_settings.player_vel
+        if self.moving_down and ship.y + game_settings.player_vel + ship.get_height() + 15 < game_settings.screen_height:
+            ship.y += game_settings.player_vel
+
+    def move_lasers(self, vel, objs, settings):
+        self.cooldown()
+        for laser in self.lasers:
+            laser.move(vel)
+            if laser.off_screen(game_settings.screen_height):
+                self.lasers.remove(laser)
+            else:
+                for obj in objs:
+                    if laser.collision(obj):
+                        objs.remove(obj)
+                        settings.scoreboard += 1
+                        if laser in self.lasers:
+                            self.lasers.remove(laser)
+                            
+
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
+
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
 
 
  
